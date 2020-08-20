@@ -1,0 +1,72 @@
+#include <iostream>
+#include <limits.h>
+#define VERTEX 9
+using namespace std;
+
+int minDistance(int dArr[], bool shortestPath[])
+{
+    int minm = INT_MAX, minIndex;
+  
+    for (int i = 0; i < VERTEX; i++)
+    if (shortestPath[i] == false && dArr[i] <= minm)
+    minm = dArr[i], minIndex = i;
+  
+    return minIndex;
+}
+
+void Display(int dArr[])
+{
+    printf("Vertex \t\t Distance from Source\n");
+    
+    for (int i = 0; i < VERTEX; i++)
+    {
+        cout<<i<< "\t\t"<< dArr[i]<<"\n";
+    }
+}
+
+void Dijkstra(int gArr[VERTEX][VERTEX], int source)
+{
+    int dArr[VERTEX]; // The output array. dArr[i] will hold the shortest
+  
+    bool shortestPath[VERTEX]; // shortestPath[i] will be true if vertex i is included in shortest
+    for (int i = 0; i < VERTEX; i++)
+    {
+        dArr[i] = INT_MAX, shortestPath[i] = false;
+        dArr[source] = 0;
+    }
+  
+  
+    for (int j = 0; j < VERTEX - 1; j++)
+    {
+        int temp = minDistance(dArr, shortestPath);
+  
+        shortestPath[temp] = true;
+  
+        for (int k = 0; k < VERTEX; k++)
+        {
+            if (!shortestPath[k] && gArr[temp][k] && dArr[temp] != INT_MAX
+            && dArr[temp] + gArr[temp][k] < dArr[k])
+            dArr[k] = dArr[temp] + gArr[temp][k];
+        }
+    }
+  
+    Display(dArr);
+}
+
+
+int main()
+{
+    int gArr[VERTEX][VERTEX] = { { 0, 3, 0, 0, 0, 0, 0, 7, 0 },
+    { 3, 0, 7, 0, 0, 0, 0, 10, 0 },
+    { 0, 7, 0, 7, 0, 3, 0, 0, 2 },
+    { 0, 0, 7, 0, 9, 14, 0, 0, 0 },
+    { 0, 0, 0, 9, 0, 10, 0, 0, 0 },
+    { 0, 0, 3, 14, 10, 0, 2, 0, 0 },
+    { 0, 0, 0, 0, 0, 2, 0, 1, 6 },
+    { 7, 10, 0, 0, 0, 0, 1, 0, 7 },
+    { 0, 0, 2, 0, 0, 0, 6, 7, 0 } };
+  
+    Dijkstra(gArr, 0);
+
+    return 0;
+}
